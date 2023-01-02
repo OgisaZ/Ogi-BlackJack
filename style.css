@@ -1,0 +1,70 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+}
+body {
+  background-color: rgb(169, 170, 156);
+}
+.greenishBG {
+  background-color: rgb(131, 177, 59);
+}
+.redBG {
+  background-color: rgb(177, 59, 104);
+}
+.player-numbers,
+.dealer-numbers {
+  text-align: center;
+}
+.btn {
+  padding: 3px;
+  margin-top: 10px;
+  width: 50px;
+  height: 25px;
+}
+.start {
+  margin-left: 35%;
+  position: relative;
+  background-color: darkgoldenrod;
+}
+.hit {
+  margin-left: 17%;
+  background-color: chartreuse;
+}
+
+.stand {
+  background-color: crimson;
+}
+
+.again {
+  background-color: gold;
+  margin-left: 35%;
+}
+
+.center {
+  margin: auto;
+  margin-top: 100px;
+  width: 50%;
+  padding: 10px;
+}
+.border {
+  border: 1px solid;
+  width: 200px;
+}
+.player-number {
+  color: aquamarine;
+}
+.dealer-number {
+  color: rgb(92, 82, 82);
+}
+.hidden-after-click {
+  display: block;
+}
+.hidden {
+  display: none;
+}
+.win-or-loss {
+  color: green;
+  margin-left: 37%;
+}
