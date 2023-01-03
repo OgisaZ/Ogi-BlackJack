@@ -6,6 +6,10 @@ let dealerCardSum = document.querySelector(`.dealer-number`);
 let winOrLossText = document.querySelector(`.win-or-loss`);
 let hiddenPlace = document.querySelectorAll(`.hidden`);
 
+document.querySelector(`.again`).classList.add(`hidden`);
+document.querySelector(`.hit`).classList.add(`hidden`);
+document.querySelector(`.stand`).classList.add(`hidden`);
+
 //Object for Players Cards
 const player = {
   FirstCard: randomNumber(),
@@ -35,18 +39,16 @@ function randomNumber() {
 //Check if player won
 function checkIfBlackJackWin(playerCardSum) {
   if (playerCardSum === 21) {
-    document.querySelector(`.hit`).style.display = `none`;
-    document.querySelector(`.stand`).style.display = `none`;
+    document.querySelector(`.hit`).classList.add(`hidden`);
+    document.querySelector(`.stand`).classList.add(`hidden`);
     document.querySelector(`.again`).classList.remove(`hidden`);
     return true;
   } else return false;
 }
 function checkIfLoss(playerCardSum) {
   if (playerCardSum > 21) {
-    document.querySelector(`.hit`).style.display = `none`;
-
-    document.querySelector(`.stand`).style.display = `none`;
-
+    document.querySelector(`.hit`).classList.add(`hidden`);
+    document.querySelector(`.stand`).classList.add(`hidden`);
     document.querySelector(`.again`).classList.remove(`hidden`);
     return true;
   } else return false;
@@ -63,12 +65,12 @@ function decideWinner(playerSum, dealerSum) {
 //On START click
 document.querySelector(".start").addEventListener("click", function () {
   //Removes START button and adds text for cards and sums
-  document.querySelector(`.hidden-after-click`).style.display = `none`;
-  for (let i = 0; i < hiddenPlace.length; i++) {
-    //za svaki put kad pretisnes start da ti se pojave dugmici hit and stand
-    hiddenPlace[i].classList.remove(`hidden`);
-  }
-  document.querySelector(`.again`).classList.add(`hidden`);
+  document.querySelector(`.start`).classList.add(`hidden`);
+  //za svaki put kad pretisnes start da ti se pojave dugmici hit and stand
+  document.querySelector(`.hit`).classList.remove(`hidden`);
+  document.querySelector(`.stand`).classList.remove(`hidden`);
+  // hiddenPlace[i].classList.remove(`hidden`);
+
   //PLAYER pisanje
   if (player.FirstCard !== 11 && player.SecondCard !== 11) {
     textEdit(playerNumberSelector, `${player.FirstCard},${player.SecondCard}`);
@@ -215,8 +217,8 @@ let dealerLastCardAce = false;
 //So when you press stand:
 document.querySelector(`.stand`).addEventListener(`click`, function () {
   //Remove hit and stand buttons, add AGAIN button
-  document.querySelector(`.hit`).style.display = `none`;
-  document.querySelector(`.stand`).style.display = `none`;
+  document.querySelector(`.hit`).classList.add(`hidden`);
+  document.querySelector(`.stand`).classList.add(`hidden`);
   document.querySelector(`.again`).classList.remove(`hidden`);
 
   //Enter a loop, the dealer equivalent of hitting until:
@@ -225,12 +227,18 @@ document.querySelector(`.stand`).addEventListener(`click`, function () {
     //Math is different if its the first time dealer hit
     if (i === 1) {
       dealer.Sum = dealer.FirstCard + dealer.SecondCard;
-      if (dealer.FirstCard === 11) {
+      //If dealer has two aces
+      if (dealer.FirstCard === 11 && dealer.SecondCard === 11) {
+        dealerFirstCardAce = true;
+        dealerSecondCardAce = true;
+        textEdit(dealerNumberSelector, `A,A`);
+        //If dealer has ace, and its the first card
+      } else if (dealer.FirstCard === 11) {
         dealerFirstCardAce = true;
         textEdit(dealerNumberSelector, `A,${dealer.SecondCard}`);
       }
       //Same for the second card
-      if (dealer.SecondCard === 11) {
+      else if (dealer.SecondCard === 11) {
         dealerSecondCardAce = true;
         textEdit(dealerNumberSelector, `${dealer.FirstCard},A`);
       } else {
@@ -303,20 +311,26 @@ document.querySelector(`.stand`).addEventListener(`click`, function () {
 //PLAY AGAIN/RESET
 document.querySelector(`.again`).addEventListener(`click`, function () {
   //hello this is some testing text
-  location.reload();
-  //reset the values of the player
-  // player.FirstCard = randomNumber();
-  // player.SecondCard = randomNumber();
-  // player.LastCard = randomNumber();
-  // player.Sum = 0;
-  // //reset the values of the dealer
-  // dealer.FirstCard = randomNumber();
-  // dealer.SecondCard = randomNumber();
-  // dealer.LastCard = randomNumber();
-  // dealer.Sum = 0;
 
-  // document.querySelector(`.hidden-after-click`).style.display = `block`;
-  // document.querySelector(`.again`).classList.add(`hidden`);
-  // document.querySelector(`.hit`).classList.add(`hidden`);
-  // document.querySelector(`.stand`).classList.add(`hidden`);
+  //reset the values of the player
+  player.FirstCard = randomNumber();
+  player.SecondCard = randomNumber();
+  player.LastCard = randomNumber();
+  player.Sum = 0;
+  //reset the values of the dealer
+  dealer.FirstCard = randomNumber();
+  dealer.SecondCard = randomNumber();
+  dealer.LastCard = randomNumber();
+  dealer.Sum = 0;
+
+  document.querySelector(`.start`).classList.remove(`hidden`);
+  document.querySelector(`.again`).classList.add(`hidden`);
+  document.querySelector(`.hit`).classList.add(`hidden`);
+  document.querySelector(`.stand`).classList.add(`hidden`);
+
+  textEdit(playerNumberSelector, `YOUR NUMBERS`);
+  textEdit(dealerNumberSelector, `DEALER NUMBERS`);
+  textEdit(playerCardSum, ``);
+  textEdit(dealerCardSum, ``);
+  textEdit(winOrLossText, ``);
 });
