@@ -5,7 +5,29 @@ let playerCardSum = document.querySelector(`.player-number`);
 let dealerCardSum = document.querySelector(`.dealer-number`);
 let winOrLossText = document.querySelector(`.win-or-loss`);
 let hiddenPlace = document.querySelectorAll(`.hidden`);
+let moneyNumber = document.querySelector(`.money-amount`);
+let money = Number(moneyNumber.textContent);
+let bet = 0;
+document.querySelector(`.confirm`).addEventListener(`click`, function () {
+  let moneyInput = Number(document.querySelector(`.money-input`).value);
+  money = Number(moneyNumber.textContent);
+  bet = 0;
+  if (money === 0) {
+    alert(`You don't have enough money`);
+  }
+  if (!moneyInput || moneyInput > money) {
+    alert(`Please input a valid amount`);
+  } else {
+    bet = moneyInput;
 
+    document.querySelector(`.confirm`).classList.add(`hidden`);
+    document.querySelector(`.start`).classList.remove(`hidden`);
+    textEdit(moneyNumber, money - bet);
+    console.log(bet);
+    money -= bet;
+  }
+});
+document.querySelector(`.start`).classList.add(`hidden`);
 document.querySelector(`.again`).classList.add(`hidden`);
 document.querySelector(`.hit`).classList.add(`hidden`);
 document.querySelector(`.stand`).classList.add(`hidden`);
@@ -53,18 +75,32 @@ function checkIfLoss(playerCardSum) {
     return true;
   } else return false;
 }
-function decideWinner(playerSum, dealerSum) {
-  if (Number(playerSum) > Number(dealerSum))
+function decideWinner(playerSum, dealerSum, money, bet) {
+  if (Number(playerSum) > Number(dealerSum)) {
     textEdit(winOrLossText, `PLAYER WON`);
-  else if (Number(playerSum) < Number(dealerSum))
+    console.log(money);
+    money += bet * 2;
+    textEdit(moneyNumber, money);
+    console.log(money);
+    return money;
+  } else if (Number(playerSum) < Number(dealerSum)) {
     textEdit(winOrLossText, `DEALER WON`);
-  else if (Number(playerSum) === Number(dealerSum))
+    console.log(money);
+    return money;
+  } else if (Number(playerSum) === Number(dealerSum)) {
     textEdit(winOrLossText, `PUSH`);
+
+    console.log(money);
+    money += bet;
+    textEdit(moneyNumber, money);
+    return money;
+  }
 }
 
 //On START click
 document.querySelector(".start").addEventListener("click", function () {
   //Removes START button and adds text for cards and sums
+  console.log(bet, money);
   document.querySelector(`.start`).classList.add(`hidden`);
   //za svaki put kad pretisnes start da ti se pojave dugmici hit and stand
   document.querySelector(`.hit`).classList.remove(`hidden`);
@@ -98,10 +134,14 @@ document.querySelector(".start").addEventListener("click", function () {
   //Ako si dobio 21 odmah
   if (checkIfBlackJackWin(player.FirstCard + player.SecondCard)) {
     textEdit(playerCardSum, player.FirstCard + player.SecondCard);
-    textEdit(winOrLossText, `You won, Blackjack`);
+    textEdit(winOrLossText, `BLACKJACK`);
+    money += bet * 2.5;
+    textEdit(moneyNumber, money);
   }
 
   if (player.FirstCard === 11 && player.SecondCard === 11) {
+    player.SecondCard = 1;
+    textEdit(playerCardSum, player.FirstCard + player.SecondCard);
     textEdit(playerNumberSelector, `A,A`);
   }
 });
@@ -204,7 +244,10 @@ document.querySelector(`.hit`).addEventListener(`click`, function () {
   }
   //If you won via card sum being exactly 21
   if (checkIfBlackJackWin(player.Sum)) {
-    textEdit(winOrLossText, `You won, Blackjack`);
+    textEdit(winOrLossText, `BLACKJACK`);
+    money += bet * 2.5;
+    console.log(money);
+    textEdit(moneyNumber, money);
     textEdit(dealerNumberSelector, `${dealer.FirstCard},${dealer.SecondCard}`);
     textEdit(dealerCardSum, dealer.FirstCard + dealer.SecondCard);
   }
@@ -290,12 +333,18 @@ document.querySelector(`.stand`).addEventListener(`click`, function () {
 
     //Pretty self  explanatory, if dealer sum is exactly 21
     if (checkIfBlackJackWin(dealer.Sum)) {
-      decideWinner(player.Sum, dealer.Sum);
+      console.log(bet);
+      console.log(money);
+      money += decideWinner(player.Sum, dealer.Sum, money, bet);
       break;
     }
     //Again self explanatory, check if dealer has over 21
     if (checkIfLoss(dealer.Sum)) {
       textEdit(winOrLossText, `DEALER LOST`);
+      console.log(money);
+      money += bet * 2;
+      console.log(money);
+      textEdit(moneyNumber, money);
       break;
     }
     //If the dealer has a card sum thats above 17, but below 21, dealer stands. But also if dealer sum is BIGGER than player sum, but still below 21, dealer stands
@@ -303,7 +352,8 @@ document.querySelector(`.stand`).addEventListener(`click`, function () {
       (dealer.Sum >= 17 && dealer.Sum < 21) ||
       (dealer.Sum > player.Sum && dealer.Sum < 21)
     ) {
-      decideWinner(player.Sum, dealer.Sum);
+      console.log(bet, money);
+      money += decideWinner(player.Sum, dealer.Sum, money, bet);
       break;
     }
   }
@@ -323,10 +373,11 @@ document.querySelector(`.again`).addEventListener(`click`, function () {
   dealer.LastCard = randomNumber();
   dealer.Sum = 0;
 
-  document.querySelector(`.start`).classList.remove(`hidden`);
+  document.querySelector(`.start`).classList.add(`hidden`);
   document.querySelector(`.again`).classList.add(`hidden`);
   document.querySelector(`.hit`).classList.add(`hidden`);
   document.querySelector(`.stand`).classList.add(`hidden`);
+  document.querySelector(`.confirm`).classList.remove(`hidden`);
 
   textEdit(playerNumberSelector, `YOUR NUMBERS`);
   textEdit(dealerNumberSelector, `DEALER NUMBERS`);

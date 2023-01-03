@@ -59,7 +59,7 @@ body {
 }
 .border {
   border: 0px solid;
-  width: 200px;
+  width: 170px;
   width: 100%;
   height: 650px;
 }
@@ -80,4 +80,21 @@ body {
 .dealer,
 .you {
   margin-left: 100px;
+}
+.money-center {
+  margin-left: 750px;
+}
+.money-amount {
+  color: green;
+}
+.money-input {
+  margin-left: 750px;
+  background-color: rgb(197, 185, 116);
+  width: 202px;
+}
+.confirm {
+  margin-left: 750px;
+  margin-top: 10px;
+  width: 202px;
+  background-color: rgb(152, 224, 18);
 }
